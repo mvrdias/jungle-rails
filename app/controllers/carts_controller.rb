@@ -1,11 +1,6 @@
 class CartsController < ApplicationController
 
   def show
-    # if cart == {}
-    #   flash[:notice] = "Sorry .... Your cart is empty."
-    #   # sleep 1.5
-    #   redirect_to :root
-    # end
   end
 
   def add_item

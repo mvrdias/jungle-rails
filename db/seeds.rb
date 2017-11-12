@@ -116,7 +116,7 @@ cat3.products.create!({
   price: 3_052.00
 })
 
-cat3.products.create!({
+electricchair = cat3.products.create!({
   name:  'Electric Chair',
   description: Faker::Hipster.paragraph(4),
   image: open_asset('furniture2.jpg'),
@@ -124,13 +124,44 @@ cat3.products.create!({
   price: 987.65
 })
 
-cat3.products.create!({
+bookshelf = cat3.products.create!({
   name:  'Red Bookshelf',
   description: Faker::Hipster.paragraph(4),
   image: open_asset('furniture3.jpg'),
   quantity: 23,
   price: 2_483.75
 })
+
+user = User.create!({name: 'Joel', email: 'joel@joel.joel'})
+user1 = User.create!({name: 'MV', email: 'mv@mv.mv'})
+bookshelf.reviews.create!({description: 'Awesome Bookshelf!', rating: 5, user: user})
+bookshelf.reviews.create!({description: 'Terrible Bookshelf', rating: 1, user: user1})
+electricchair.reviews.create!({description: 'Hottttt', rating: 5, user: user1})
+
+## USERS
+puts "Re-creating Users ..."
+
+User.destroy_all
+
+
+## REVIEWS
+puts "Re-creating Reviews ..."
+
+Review.destroy_all
+
+Review.create!({
+  product_id: 1,
+  user_id: 2,
+  description: 'Woah, lame...',
+  rating: 1
+  })
+
+Review.create!({
+  product_id: 2,
+  user_id: 1,
+  description: 'another exciting review!',
+  rating: 4
+  })
 
 
 puts "DONE!"

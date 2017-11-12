@@ -2,11 +2,6 @@ class OrdersController < ApplicationController
 
   def show
     @order = Order.find(params[:id])
-    # respond_to do |format|
-    #   UserMailer.welcome_email(@order).deliver_later
-    #   format.html { @order }
-    #   format.json { render json: @order, status: :created, location: @order }
-    # end
   end
 
   def create
@@ -15,22 +10,25 @@ class OrdersController < ApplicationController
 
     if order.valid?
       empty_cart!
-      redirect_to order, notice: 'Your Order has been placed.'
+      redirect_to order
+      # , notice: 'Your Order has been placed.'
 
       UserMailer.welcome_email(order).deliver_now
 
     else
-      redirect_to cart_path, flash: { error: order.errors.full_messages.first }
+      redirect_to cart_path
+      # , flash: { error: order.errors.full_messages.first }
     end
 
   rescue Stripe::CardError => e
-    redirect_to cart_path, flash: { error: e.message }
+    redirect_to cart_path
+    # , flash: { error: e.message }
   end
 
   private
 
   def empty_cart!
-    # empty hash means no products in cart :)
+    # empty hash means no products in cart
     update_cart({})
   end
 
@@ -47,7 +45,7 @@ class OrdersController < ApplicationController
     order = Order.new(
       email: params[:stripeEmail],
       total_cents: cart_total,
-      stripe_charge_id: stripe_charge.id, # returned by stripe
+      stripe_charge_id: stripe_charge.id,
     )
     cart.each do |product_id, details|
       if product = Product.find_by(id: product_id)
@@ -64,7 +62,6 @@ class OrdersController < ApplicationController
     order
   end
 
-  # returns total in cents not dollars (stripe uses cents as well)
   def cart_total
     total = 0
     cart.each do |product_id, details|
